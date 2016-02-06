@@ -45,7 +45,7 @@ classdef generation
         end
         %Calculates average data for the topX
         function generation = xAverageData(generation,characters)
-            %generate and plot the average positions
+            %generate the average positions
             %Calculate Average Positions/fitness
             generation.topXAveragePos = zeros(size(characters(2).positions));
             generation.topXAverageFitness=0;
@@ -80,7 +80,7 @@ classdef generation
         end
         %Calculates average data for the generation
         function generation = averageData(generation,characters)
-            %generate and plot the average positions
+            %generate the average positions
             %Calculate Average Positions/fitness
             generation.averagePos = zeros(size(characters(2).positions));
             generation.averageFitness=0;

@@ -11,6 +11,46 @@ classdef ActionHandler
             for i=1:numberActions
                 actions(i)=ActionHandler.randomAction();
             end
+            actions=ActionHandler.sortActions(actions);
+        end
+        %Sorts the characters by fitness values from lowest to highest fitness,
+        %using the quicksort algorithm
+        function sortedActions = sortActions(actions)
+            if numel(actions) <= 1 %If the characters has 1 element
+                sortedActions = actions;
+                return
+            end
+            
+            %Determine Pivot
+            pivot = actions(end);
+            actions(end) = [];
+            
+            
+            lessOrEqual = ActionHandler.getlessOrEqual(actions,pivot);
+            greater = ActionHandler.getGreater(actions,pivot);
+            
+            %Do recursiveness
+            sortedActions = [ActionHandler.sortActions(lessOrEqual) pivot ActionHandler.sortActions(greater)];
+            
+        end
+        %Returns the elements that are greater than the pivot
+        function greater = getGreater(actions, pivot)
+            greater = Action.empty();
+            for i=1:size(actions,2)
+                if(actions(i).time>pivot.time)
+                    greater(end+1)=actions(i);
+                end
+            end
+            
+        end
+        %Returns the elements that are less than/equal to the pivot
+        function lessOrEqual = getlessOrEqual(actions, pivot)
+            lessOrEqual = Action.empty();
+            for i=1:size(actions,2)
+                if(actions(i).time<=pivot.time)
+                    lessOrEqual(end+1)=actions(i);
+                end
+            end
         end
         function action = randomAction()
             %Unfortunately, Matlab doesn't seem to support generics, there

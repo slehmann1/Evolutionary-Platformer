@@ -8,9 +8,12 @@ function platformEvolution()
     
     tic;
     clf;
-    setupPlot();
-    subplot(2,1,1);
     level=Level();
+    setupPlot(Character.maximumAllowedTime,level);
+    subplot(2,1,1);
+    hold on;
+    level.drawLevel();
+    
     characters(1,generationSize) = Character();
     
     for i=1:generationSize
@@ -19,6 +22,7 @@ function platformEvolution()
         characters(i)=characters(i).run();
         characters(i).fitness=characters(i).calculateFitness(1,1,1);
     end
+    
     characters=sortByFitness(characters);
     generation(characters,10);
     

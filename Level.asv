@@ -55,10 +55,8 @@ classdef Level
             level.minAxisValue = minAxisValue - (maxAxisValue-minAxisValue)*level.bufferValue;
             level.maxAxisValue = maxAxisValue + (maxAxisValue-minAxisValue)*level.bufferValue;
         end
-        %Displays the Level
         function drawLevel(level)
-            %display the level
-            stairs(level.x,level.y);
+            
         end
         %Returns the y value at a specific x
         function y=getY(level,xpos)
