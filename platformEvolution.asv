@@ -19,15 +19,15 @@ function platformEvolution()
         characters(i)=characters(i).run();
         characters(i).fitness=characters(i).calculateFitness(1,1,1);
     end
-    averagePositions(characters,[1,0,0]);
+    averagePositions(characters);
     characters=sortByFitness(characters);
-    averagePositions(characters(90:end),[0,1,0]);
+    
     toc
     disp(toc);
     
 end
 %generate and plot the average positions
-function averagePositions(characters,Color)
+function averagePositions(characters)
     %Calculate Average Positions
     averagePos = zeros(size(characters(2).positions));
     for i=1:size(characters(2))
@@ -38,17 +38,15 @@ function averagePositions(characters,Color)
     
     subplot(2,1,1);
     path=line(averagePos(2,:),averagePos(3,:));
-    path.Color=Color;
-   
+    path.Color=[1,0,0,0.5];
+    
     
     subplot(2,2,3);
     path=line(averagePos(1,:),averagePos(3,:));
-    path.Color=Color;
+    path.Color=[1,0,0,];
     
     subplot(2,2,4);
     path=line(averagePos(1,:),averagePos(2,:));
-    path.Color=Color;
-    
-
+    path.Color=[1,0,0,];
     
 end

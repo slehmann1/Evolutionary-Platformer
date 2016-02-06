@@ -5,7 +5,7 @@ classdef Character
     properties
         % The height of the character, the character has been on a diet and
         % thus it is asssumed that it has no width
-        height =1;
+        height =0;
         %all of the actions that the character performs
         actions;
         %The Level, useful for deadedness
@@ -156,7 +156,7 @@ classdef Character
         end
         %compares two characters by fitness (<= operator)
         function compare = le(a,b)
-           if a.fitness<=b.fitness
+            if a.fitness<=b.fitness
                 compare =1;
                 return;
             end
@@ -164,7 +164,7 @@ classdef Character
         end
         %compares two characters by fitness (>= operator)
         function compare = ge(a,b)
-             if a.fitness>=b.fitness
+            if a.fitness>=b.fitness
                 compare =1;
                 return;
             end
@@ -172,7 +172,7 @@ classdef Character
         end
         %compares two characters by fitness (< operator)
         function compare = lt(a,b)
-             if a.fitness<b.fitness
+            if a.fitness<b.fitness
                 compare =1;
                 return;
             end
@@ -180,7 +180,7 @@ classdef Character
         end
         %compares two characters by fitness (> operator)
         function compare = gt(a,b)
-             if a.fitness>b.fitness
+            if a.fitness>b.fitness
                 compare =1;
                 return;
             end
