@@ -3,7 +3,7 @@ classdef Level
     %Level Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties
+    properties(Constant)
         %impacts the vertical stretch
         bufferValue=1;
         %the number of x values
@@ -14,6 +14,8 @@ classdef Level
         minStairDiff=0.5;
         %maximum difference between stair heights
         maxStairDiff=1;
+    end
+    properties
         x;
         y;
     end

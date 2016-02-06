@@ -1,29 +1,31 @@
 classdef Character
     %CHARACTER The actual Character
     %   Detailed explanation goes here
-    
-    properties
+    properties(Constant)
         % The height of the character, the character has been on a diet and
         % thus it is asssumed that it has no width
         height =0;
+        %The maximum amount of time a character is allowed in seconds
+        maximumAllowedTime=60;
+        %The difference in times for each calculated position (seconds)
+        timeInterval =0.1;
+        %the acceleration in gravity in m/s^2
+        gravity=9.81;
+        %Helps account for imprecision
+        fudgeFactor=0.2;
+    end
+    properties
+        
         %all of the actions that the character performs
         actions;
         %The Level, useful for deadedness
         level;
-        %The maximum amount of time a character is allowed in seconds
-        maximumTime=60;
-        %The difference in times for each calculated position (seconds)
-        timeInterval =0.1;
         %Row 1 = time, row 2 = x, row 3 = y
         positions;
         xSpeed=0;
         ySpeed=0;
         %the location where the position is being evaluated
         currentIndex;
-        %the acceleration in gravity in m/s^2
-        gravity=9.81;
-        %Helps account for imprecision
-        fudgeFactor=0.2;
         maxDistance;
         maxTime;
         fitness;
@@ -37,9 +39,9 @@ classdef Character
                 character.level=level;
                 
                 %Initialize the positions
-                character.positions = [0:character.timeInterval:character.maximumTime; ...
-                    0:character.timeInterval:character.maximumTime;...
-                    0:character.timeInterval:character.maximumTime;];
+                character.positions = [0:character.timeInterval:character.maximumAllowedTime; ...
+                    0:character.timeInterval:character.maximumAllowedTime;...
+                    0:character.timeInterval:character.maximumAllowedTime;];
                 character.positions(2,:)=0;
                 character.positions(3,:)=character.height/2;
             end
