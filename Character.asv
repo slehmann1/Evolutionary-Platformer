@@ -155,49 +155,59 @@ classdef Character
             -size(character.actions,2)*actionWeight;
         end
         %compares two characters by fitness (<= operator)
-        function compare = le(a,b)
-           if a.fitness<=b.fitness
-                compare =1;
-                return;
+        function [compare] = le(a,b)
+            disp(
+            compare = zeros(size(a));
+            for i=1:size(a)
+                if((a(i).fitness)<=(b.fitness))
+                    compare(i) =1;
+                end
+                compare(i) = 0;
             end
-            compare = 0;
         end
         %compares two characters by fitness (>= operator)
         function compare = ge(a,b)
-             if a.fitness>=b.fitness
-                compare =1;
-                return;
+            compare = zeros(size(a));
+            for i=1:size(a)
+                if((a(i).fitness)>=(b(i).fitness))
+                    compare(i) =1;
+                end
+                compare(i) = 0;
             end
-            compare = 0;
         end
         %compares two characters by fitness (< operator)
         function compare = lt(a,b)
-             if a.fitness<b.fitness
-                compare =1;
-                return;
+            compare = zeros(size(a));
+            for i=1:size(a)
+                if((a(i).fitness)<(b(i).fitness))
+                    compare(i) =1;
+                end
+                compare(i) = 0;
             end
-            compare = 0;
         end
         %compares two characters by fitness (> operator)
         function compare = gt(a,b)
-             if a.fitness>b.fitness
-                compare =1;
-                return;
+            compare = zeros(size(a));
+            for i=1:size(a)
+                if((a(i).fitness)>(b(i).fitness))
+                    compare(i) =1;
+                end
+                compare(i) = 0;
             end
-            compare = 0;
         end
         
         %compares two characters by fitness (== operator)
         function compare = eq(a,b)
-            if a.fitness==b.fitness
-                compare =1;
-                return;
+            compare = zeros(size(a));
+           for i=1:size(a)
+                if((a(i).fitness)==(b(i).fitness))
+                    compare(i) =1;
+                end
+                compare(i) = 0;
             end
-            compare = 0;
         end
     end
+    
 end
-
-
 
 
