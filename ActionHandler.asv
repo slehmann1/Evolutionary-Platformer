@@ -16,12 +16,12 @@ classdef ActionHandler
             %Unfortunately, Matlab doesn't seem to support generics, there
             %must be a better way to do this. Check Later
             actionType = ActionHandler.randomInt(1,2);
-            time = rand(1)*Action.maxTime;
+            time = ActionHandler.rand(1)*Action.maxTime;
             switch actionType
                 case 1
-                    action=Jump(time,rand(1)*Jump.maxSpeed);
+                    action=Jump(time,ActionHandler.rand(1)*Jump.maxSpeed);
                 case 2
-                    action=Move(time,rand(1)*Move.maxSpeed);
+                    action=Move(time,ActionHandler.randomInt(0,Move.maxSpeed));
                 otherwise
                     disp('UNSUPPORTED ACTION');
             end
