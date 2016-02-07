@@ -2,7 +2,7 @@ classdef ActionHandler
     %ACTIONHANDLER Summary of this class goes here
     %   Detailed explanation goes here
     properties(Constant)
-        maximumStartActions=15;
+        maximumStartActions=5;
     end
     methods (Static)
         function  actions = randomizedActions()

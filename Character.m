@@ -46,7 +46,6 @@ classdef Character
                 character.positions(3,:)=character.height/2;
             end
         end
-        
         function character=run(character)
             
             actionsIndex=1;

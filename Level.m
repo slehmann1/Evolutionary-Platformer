@@ -58,7 +58,7 @@ classdef Level
         %Displays the Level
         function drawLevel(level)
             %display the level
-            stairs(level.x,level.y);
+            stairs(level.x,level.y,'g');
         end
         %Returns the y value at a specific x
         function y=getY(level,xpos)
