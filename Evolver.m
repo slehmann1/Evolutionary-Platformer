@@ -14,10 +14,9 @@ classdef Evolver
         function characters = evolve(characters)
             
         end
-        function [testices, breeders] = selectBreedingPairs (characters)
+        function breeders = selectBreedingPairs (characters)
             %Preallocate breeders
             breeders = [characters; characters];
-            testices = zeros([2,100]);
             %The progress in assigning breedingPairs
             currentIndex=1;
             %Top breeders C 2
@@ -26,13 +25,11 @@ classdef Evolver
             for outer=1:Evolver.topBreeders
                 for inner = outer+1:Evolver.topBreeders
                     breeders(:,currentIndex) = [characters(inner); characters(outer)];
-                    testices(:,currentIndex) = [inner; outer];
                     currentIndex=currentIndex+1;
                 end
             end
             if(Evolver.kingOfTheHill)
                 breeders(:,currentIndex)=[characters(1);characters(1)];
-                testices(:,currentIndex)=[1,1];
                 currentIndex=currentIndex+1;
             end
             %Now fill the remaining slots with randoms
@@ -46,7 +43,6 @@ classdef Evolver
                     index2=round(rand(1)*(Evolver.generationSize));
                 end
                 breeders(:,currentIndex)=[characters(index1);characters(index2)];
-                testices(:,currentIndex)=[index1,index2];
             end
             
         end
