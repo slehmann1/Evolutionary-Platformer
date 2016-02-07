@@ -6,9 +6,9 @@ classdef Character
         % thus it is asssumed that it has no width
         height =0;
         %The maximum amount of time a character is allowed in seconds
-        maximumAllowedTime=60;
+        maximumAllowedTime=30;
         %The difference in times for each calculated position (seconds)
-        timeInterval =0.1;
+        timeInterval =0.15;
         %the acceleration in gravity in m/s^2
         gravity=9.81;
         %Helps account for imprecision
@@ -59,7 +59,7 @@ classdef Character
             
             while index<=dimensions(2)
                 character.currentIndex=index;
-                if (actionsIndex<=size(character.actions,2)) & (character.positions(1,index) > character.actions(actionsIndex).time)
+                if (actionsIndex<=size(character.actions,2)) && (character.positions(1,index) > character.actions(actionsIndex).time)
                     %the action should be performed
                     character=character.actions(actionsIndex).act(character);
                     actionsIndex=actionsIndex+1;
@@ -73,7 +73,7 @@ classdef Character
                 character.positions(3,index) = character.positions(3,index-1)+(character.ySpeed*character.timeInterval);
                 %check whether or not the character will die
                 if(willCrash(character,character.positions(2,index),character.positions(3,index-1),character.positions(3,index)))
-                    %set distance and time, draw the graph and return
+                    %set distance and time
                     distance = character.positions(2,index);
                     time=character.positions(1,index);
                     character.maxDistance =distance;
@@ -82,7 +82,6 @@ classdef Character
                     character.positions(2,index:end)=character.positions(2,index);
                     character.positions(3,index:end)=character.positions(3,index);
                     
-                    character.draw();
                     return;
                 end
                 
@@ -96,29 +95,11 @@ classdef Character
                 
                 index=index+1;
             end
-            %set distance and time, draw the graph and return
+            %set distance and time
             distance = character.positions(2,index-1);
             time=character.positions(1,index-1);
             character.maxDistance =distance;
             character.maxTime=time;
-            character.draw();
-        end
-        
-        %draws the character's path
-        function [] = draw(character)
-            
-            subplot(2,1,1);
-            path=line(character.positions(2,:),character.positions(3,:));
-            path.Color=[0,0,0,0.5];
-            
-            
-            subplot(2,2,3);
-            path=line(character.positions(1,:),character.positions(3,:));
-            path.Color=[0,0,0,0.5];
-            
-            subplot(2,2,4);
-            path=line(character.positions(1,:),character.positions(2,:));
-            path.Color=[0,0,0,0.5];
         end
         
         function grounded=isGrounded(character,xPos,yPos)

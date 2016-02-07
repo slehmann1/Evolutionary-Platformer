@@ -1,28 +1,34 @@
 classdef platformEvolution
     properties (Constant)
-        
+        generationSize=100;
+    end
+    properties
+       level; 
     end
     methods (Static)
         function obj= platformEvolution()
             
             clear;
             clc;
-            
-            generationSize=100;
-            
-            
             tic;
             clf;
-            level=Level();
-            setupPlot(Character.maximumAllowedTime,level);
+            obj.level=Level();
+            setupPlot(Character.maximumAllowedTime,obj.level);
             subplot(2,1,1);
             hold on;
-            level.drawLevel();
+            obj.level.drawLevel();
             
-            characters(1,generationSize) = Character();
+            characters(1,platformEvolution.generationSize) = Character();
+            
+            for i=1:platformEvolution.generationSize
+                m=ActionHandler.randomizedActions();
+                characters(i) = Character(m,obj.level);
+                characters(i)=characters(i).run();
+                characters(i).fitness=characters(i).calculateFitness(1,1,1);
+            end
             
             for i=1:100
-                platiterate(characters);
+                platformEvolution.iterate(obj,characters);
                 characters=Evolver.evolve(characters);
             end
             
@@ -32,16 +38,45 @@ classdef platformEvolution
             
         end
         %Runs a generation
-        function iterate(characters)
+        function iterate(platform_Evolution,characters)
+            clf;
+            setupPlot(Character.maximumAllowedTime,platform_Evolution.level);
+            subplot(2,1,1);
+            hold on;
+            platform_Evolution.level.drawLevel();
             for i=1:platformEvolution.generationSize
-                m=ActionHandler.randomizedActions();
-                characters(i) = Character(m,level);
                 characters(i)=characters(i).run();
                 characters(i).fitness=characters(i).calculateFitness(1,1,1);
             end
             
             characters=sortByFitness(characters);
             generation(characters,10);
+            hold off;
+            
+            %Draw character graphs
+            
+            %draws the character's path
+            subplot(2,1,1);
+            for i=1:size(characters,2)
+                path=line(characters(i).positions(2,:),characters(i).positions(3,:));
+                path.Color=[0,0,0,0.5];
+            end
+            
+            subplot(2,1,1);
+            for i=1:size(characters,2)
+                path=line(characters(i).positions(2,:),characters(i).positions(3,:));
+                path.Color=[0,0,0,0.5];
+            end
+
+            subplot(2,2,3);
+            path=line(character.positions(1,:),character.positions(3,:));
+            path.Color=[0,0,0,0.5];
+            
+            subplot(2,2,4);
+            path=line(character.positions(1,:),character.positions(2,:));
+            path.Color=[0,0,0,0.5];
+        end
+            drawnow();
         end
     end
 end
