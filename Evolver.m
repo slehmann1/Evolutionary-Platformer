@@ -3,8 +3,8 @@ classdef Evolver
     %   Detailed explanation goes here
     
     properties(Constant)
-        topBreeders=14;
-        generationSize=100;
+        topBreeders=7;
+        generationSize=25;
         %If this is true, then the best character will breed with itself
         kingOfTheHill=true;
     end
@@ -43,7 +43,7 @@ classdef Evolver
                 else
                     index2=Evolver.randomInt(1,Evolver.generationSize);
                 end
-                    breeders(:,currentIndex)=[characters(index1);characters(index2)];
+                breeders(:,currentIndex)=[characters(index1);characters(index2)];
             end
             
         end
@@ -58,8 +58,7 @@ classdef Evolver
             for i=1:size(offspring,2)
                 crossoverPoint = min([size(breedingPair(1).actions,2),size(breedingPair(2).actions,2)]);
                 crossoverPoint=Evolver.randomInt(1,crossoverPoint);
-                actions = [breedingPair(1).actions(1:crossoverPoint) breedingPair(2).actions(crossoverPoint:end)];
-                actions=actions';
+                actions = [breedingPair(1).actions(1:crossoverPoint) breedingPair(2).actions(crossoverPoint+1:end)];
                 %Have to resort actions
                 actions =ActionHandler.sortActions(actions);
                 offspring(i).actions=actions;

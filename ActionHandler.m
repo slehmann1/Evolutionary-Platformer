@@ -2,11 +2,12 @@ classdef ActionHandler
     %ACTIONHANDLER Summary of this class goes here
     %   Detailed explanation goes here
     properties(Constant)
-        maximumStartActions=5;
+        maximumStartActions=10;
     end
     methods (Static)
         function  actions = randomizedActions()
             numberActions = ActionHandler.randomInt(1,ActionHandler.maximumStartActions);
+            numberActions=ActionHandler.maximumStartActions;
             actions(1,numberActions) = Action();
             for i=1:numberActions
                 actions(i)=ActionHandler.randomAction();

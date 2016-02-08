@@ -1,11 +1,16 @@
 function [] = setupPlot(maxTime,level)
 %SETUPPLOT This sets up the plots
 %   Detailed explanation goes here
-    subplot(2,1,1);
+    subplot(2,2,1);
     title('Y vs X');
     xlabel('X (meters)')
     ylabel('Y (meters)')
     axis([level.x(1) level.x(end) level.minAxisValue level.maxAxisValue]);
+    
+    subplot(2,2,2);
+    title('Average Fitness vs Generation');
+    xlabel('Generation Number')
+    ylabel('Average Fitness Score')
     
     subplot(2,2,3);
     title('Y vs time');
