@@ -3,20 +3,22 @@ classdef Evolver
     %   Detailed explanation goes here
     
     properties(Constant)
-        topBreeders=7;
-        generationSize=100;
+        topBreeders=10;
+        generationSize=50;
         %If this is true, then the best character will breed with itself
-        numberOfClones=4;
-        mutationRate=0.1;
+        numberOfClones=2;
+        mutationRate=0.2;
     end    
     methods (Static)
         %Start a new generation by evolving
         function characters = evolve(characters)
-            clones = characters(Evolver.generationSize-Evolver.numberOfClones:Evolver.generationSize);
+            clones = characters(Evolver.generationSize-Evolver.numberOfClones+1:Evolver.generationSize);
             characters = Evolver.selectBreedingPairs(characters);
             characters = Evolver.breed(characters);
             characters = Evolver.mutate(characters);
-            characters(Evolver.generationSize-Evolver.numberOfClones:Evolver.generationSize)=clones;
+            if Evolver.numberOfClones>0
+                characters((Evolver.generationSize-Evolver.numberOfClones+1):Evolver.generationSize)=clones;
+            end
         end
         function characters = mutate(characters)
             startPoint =1;
@@ -45,7 +47,7 @@ classdef Evolver
             %pairs = 3C2=3  
             for outer=currentIndex:Evolver.topBreeders
                 for inner = outer+1:Evolver.topBreeders
-                    breeders(:,currentIndex) = [characters(inner); characters(outer)];
+                    breeders(:,currentIndex) = [characters(outer); characters(inner)];
                     currentIndex=currentIndex+1;
                 end
             end

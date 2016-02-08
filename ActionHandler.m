@@ -3,13 +3,18 @@ classdef ActionHandler
     %   Detailed explanation goes here
     properties(Constant)
         maximumStartActions=10;
+        
+        %Matlab doesn't seem to support overriding of properties, which is
+        %absolutely infuriating
+        moveProbability=0;
     end
     methods (Static)
         function  actions = randomizedActions()
             numberActions = ActionHandler.randomInt(1,ActionHandler.maximumStartActions);
             numberActions=ActionHandler.maximumStartActions;
             actions(1,numberActions) = Action();
-            for i=1:numberActions
+            actions(1) = Move(0,2);
+            for i=2:numberActions
                 actions(i)=ActionHandler.randomAction();
             end
             actions=ActionHandler.sortActions(actions);
@@ -56,16 +61,13 @@ classdef ActionHandler
         function action = randomAction()
             %Unfortunately, Matlab doesn't seem to support generics, there
             %must be a better way to do this. Check Later
-            actionType = ActionHandler.randomInt(1,2);
+            actionType = rand();
             time = rand(1)*Action.maxTime;
-            switch actionType
-                case 1
-                    action=Jump(time,rand(1)*(Jump.maxSpeed-Jump.minSpeed)+Jump.minSpeed);
-                case 2
-                    action=Move(time,rand(1)*Move.maxSpeed);
-                otherwise
-                    disp('UNSUPPORTED ACTION');
-            end
+            if(actionType<ActionHandler.moveProbability)
+                action=Move(time,rand(1)*Move.maxSpeed);
+            else
+                action=Jump(time,rand(1)*(Jump.maxSpeed-Jump.minSpeed)+Jump.minSpeed);
+            end  
         end
         function int = randomInt(startInt,endInt)
             int = startInt+round(rand(1)*(endInt-startInt));

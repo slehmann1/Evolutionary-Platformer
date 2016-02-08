@@ -13,6 +13,7 @@ classdef Action <matlab.mixin.Heterogeneous
         act(character);
         function action = Action()
             
+            
         end
     end
 end
