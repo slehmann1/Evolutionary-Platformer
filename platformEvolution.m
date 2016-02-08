@@ -1,7 +1,4 @@
 classdef platformEvolution
-    properties (Constant)
-        generationSize=25;
-    end
     properties
         level;
         averageFitness;
@@ -20,9 +17,9 @@ classdef platformEvolution
             hold on;
             obj.level.drawLevel();
             
-            characters(1,platformEvolution.generationSize) = Character();
+            characters(1,Evolver.generationSize) = Character();
             obj.averageFitness=double.empty(2,0);
-            for i=1:platformEvolution.generationSize
+            for i=1:Evolver.generationSize
                 m=ActionHandler.randomizedActions();
                 characters(i) = Character(m,obj.level);
                 characters(i)=characters(i).run();
@@ -31,8 +28,7 @@ classdef platformEvolution
             obj.generationCount=1;
             %Iterate more
             for i=1:1000
-                obj= platformEvolution.iterate(obj,characters);
-                characters=sortByFitness(characters);
+                [obj,characters]= platformEvolution.iterate(obj,characters);
                 characters=Evolver.evolve(characters);
             end
             
@@ -50,15 +46,15 @@ classdef platformEvolution
         
         
         %Runs a generation
-        function platform_Evolution = iterate(platform_Evolution,characters)
+        function [platform_Evolution,characters] = iterate(platform_Evolution,characters)
             clf;
             setupPlot(Character.maximumAllowedTime,platform_Evolution.level);
             subplot(2,2,1);
             hold on;
             platform_Evolution.level.drawLevel();
-            for i=1:platformEvolution.generationSize
+            for i=1:Evolver.generationSize
                 characters(i)=characters(i).run();
-                characters(i).fitness=characters(i).calculateFitness(1,1,1);
+                characters(i).fitness=characters(i).calculateFitness(1,0.1,0);
             end
             
             characters=sortByFitness(characters);

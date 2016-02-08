@@ -4,35 +4,52 @@ classdef Evolver
     
     properties(Constant)
         topBreeders=7;
-        generationSize=25;
+        generationSize=100;
         %If this is true, then the best character will breed with itself
-        kingOfTheHill=true;
-    end
-    
+        numberOfClones=4;
+        mutationRate=0.1;
+    end    
     methods (Static)
         %Start a new generation by evolving
         function characters = evolve(characters)
+            clones = characters(Evolver.generationSize-Evolver.numberOfClones:Evolver.generationSize);
             characters = Evolver.selectBreedingPairs(characters);
             characters = Evolver.breed(characters);
+            characters = Evolver.mutate(characters);
+            characters(Evolver.generationSize-Evolver.numberOfClones:Evolver.generationSize)=clones;
+        end
+        function characters = mutate(characters)
+            startPoint =1;
+            for i=startPoint:size(characters,2)
+                if(rand<=Evolver.mutationRate)
+                    %Mutate
+                    characters(i)=Evolver.mutateCharacter(characters(i));
+                end
+                
+            end
+        end
+        function character= mutateCharacter(character)
+            %Currently only mutates one point
+            mutationLocation = Evolver.randomInt(1,size(character.actions,2));
+            character.actions(mutationLocation) = ActionHandler.randomAction();
+            
         end
         function breeders = selectBreedingPairs (characters)
             %Preallocate breeders
             breeders = [characters; characters];
             %The progress in assigning breedingPairs
+           
             currentIndex=1;
             %Top breeders C 2
             %For example, if TopBreeders = 3, pairs: 1-2,1-3,2-3 number of
-            %pairs = 3C2=3
-            for outer=1:Evolver.topBreeders
+            %pairs = 3C2=3  
+            for outer=currentIndex:Evolver.topBreeders
                 for inner = outer+1:Evolver.topBreeders
                     breeders(:,currentIndex) = [characters(inner); characters(outer)];
                     currentIndex=currentIndex+1;
                 end
             end
-            if(Evolver.kingOfTheHill)
-                breeders(:,currentIndex)=[characters(1);characters(1)];
-                currentIndex=currentIndex+1;
-            end
+            
             %Now fill the remaining slots with randoms
             %This for loop syntax makes me vomit
             for currentIndex=currentIndex:Evolver.generationSize

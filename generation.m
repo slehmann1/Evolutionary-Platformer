@@ -22,8 +22,8 @@ classdef generation
             obj=obj.averageData(characters);
             obj=obj.xAverageData(characters);
             obj=obj.checkSurvival(characters);
-            obj.plotPositions(obj.averagePos,[1,0,0],obj.allSurvived);
-            obj.plotPositions(obj.topXAveragePos,[0,1,0],obj.allXSurvived);
+            obj.plotPositions(obj.averagePos,[1,0,0,0.1],obj.allSurvived);
+            obj.plotPositions(obj.topXAveragePos,[0,1,0,0.1],obj.allXSurvived);
             
         end
         %Plots the positions onto the x,y,time graphs
@@ -47,7 +47,7 @@ classdef generation
         function generation = xAverageData(generation,characters)
             %generate the average positions
             %Calculate Average Positions/fitness
-            generation.topXAveragePos = zeros(size(characters(2).positions));
+            generation.topXAveragePos = zeros(size(characters(1).positions));
             generation.topXAverageFitness=0;
             
             %The characters are ordered from least to greatest fitness,
@@ -82,7 +82,7 @@ classdef generation
         function generation = averageData(generation,characters)
             %generate the average positions
             %Calculate Average Positions/fitness
-            generation.averagePos = zeros(size(characters(2).positions));
+            generation.averagePos = zeros(size(characters(1).positions));
             generation.averageFitness=0;
             
             for i=1:size(characters,2)

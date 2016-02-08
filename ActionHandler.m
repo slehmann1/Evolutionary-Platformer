@@ -60,7 +60,7 @@ classdef ActionHandler
             time = rand(1)*Action.maxTime;
             switch actionType
                 case 1
-                    action=Jump(time,rand(1)*Jump.maxSpeed);
+                    action=Jump(time,rand(1)*(Jump.maxSpeed-Jump.minSpeed)+Jump.minSpeed);
                 case 2
                     action=Move(time,rand(1)*Move.maxSpeed);
                 otherwise
