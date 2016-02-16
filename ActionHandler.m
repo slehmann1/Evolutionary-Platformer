@@ -58,6 +58,20 @@ classdef ActionHandler
                 end
             end
         end
+        %A random action, time limited by the length of the characters
+        %lifespan
+        function action = randomActionWithTime(character)
+            %Unfortunately, Matlab doesn't seem to support generics, there
+            %must be a better way to do this. Check Later
+            actionType = rand();
+            time = rand(1)*character.maxTime;
+            if(actionType<ActionHandler.moveProbability)
+                action=Move(time,rand(1)*Move.maxSpeed);
+            else
+                action=Jump(time,rand(1)*(Jump.maxSpeed-Jump.minSpeed)+Jump.minSpeed);
+            end  
+        end
+        %A random action, with no time limitations
         function action = randomAction()
             %Unfortunately, Matlab doesn't seem to support generics, there
             %must be a better way to do this. Check Later

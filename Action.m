@@ -7,6 +7,7 @@ classdef Action <matlab.mixin.Heterogeneous
     properties
         %The time at which the action occurs
         time;
+        speed;
     end
     methods
         %perform the action

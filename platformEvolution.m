@@ -2,6 +2,7 @@ classdef platformEvolution
     properties
         level;
         averageFitness;
+        topXAverageFitness;
         generationCount;
     end
     methods (Static)
@@ -19,6 +20,7 @@ classdef platformEvolution
             
             characters(1,Evolver.generationSize) = Character();
             obj.averageFitness=double.empty(2,0);
+            obj.topXAverageFitness=double.empty(2,0);
             for i=1:Evolver.generationSize
                 m=ActionHandler.randomizedActions();
                 characters(i) = Character(m,obj.level);
@@ -61,6 +63,10 @@ classdef platformEvolution
             gen = generation(characters,10);
             platform_Evolution.averageFitness( 1,size(platform_Evolution.averageFitness,2)+1) = gen.averageFitness;
             platform_Evolution.averageFitness( 2,size(platform_Evolution.averageFitness,2)) = size(platform_Evolution.averageFitness,2);
+            
+            platform_Evolution.topXAverageFitness( 1,size(platform_Evolution.topXAverageFitness,2)+1) = gen.topXAverageFitness;
+            platform_Evolution.topXAverageFitness( 2,size(platform_Evolution.topXAverageFitness,2)) = size(platform_Evolution.topXAverageFitness,2);
+           
             %Draw character graphs
             
             %draws the character's path
@@ -69,6 +75,7 @@ classdef platformEvolution
             
             subplot(2,2,2);
             line(platform_Evolution.averageFitness(2,:),platform_Evolution.averageFitness(1,:));
+            line(platform_Evolution.topXAverageFitness(2,:),platform_Evolution.topXAverageFitness(1,:));
 
             
             

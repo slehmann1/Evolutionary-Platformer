@@ -5,10 +5,7 @@ classdef Move <Action
         %the maximum speed allowed
         maxSpeed = 2;
     end
-    properties
-        %the set speed
-        speed;
-    end
+
     
     methods
         function move=Move(time,speed)

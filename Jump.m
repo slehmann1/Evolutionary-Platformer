@@ -6,10 +6,7 @@ classdef Jump <Action
         maxSpeed = 5;
         minSpeed = 3;
     end
-    properties
-        %the set speed
-        speed;
-    end
+
     
     methods
         function jump=Jump(time,speed)

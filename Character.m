@@ -13,9 +13,10 @@ classdef Character
         gravity=9.81;
         %Helps account for imprecision
         fudgeFactor=0.2;
+        %The speed reduction from being airborne
+        airResistance = 0.1;
     end
     properties
-        
         %all of the actions that the character performs
         actions;
         %The Level, useful for deadedness
@@ -47,6 +48,8 @@ classdef Character
             end
         end
         function character=run(character)
+            %Starts Grounded
+            isGrounded=true;
             character.xSpeed=0;
             character.ySpeed=0;
             character.currentIndex=0;
@@ -63,6 +66,7 @@ classdef Character
             index=2;
             character.currentIndex=index;
             while index<=dimensions(2)
+                
                 character.currentIndex=index;
                 if (actionsIndex<=size(character.actions,2)) && (character.positions(1,index) > character.actions(actionsIndex).time)
                     %the action should be performed
@@ -71,11 +75,14 @@ classdef Character
                 end
                 
                 
-                
-                
-                %Update x and y locations
-                character.positions(2,index) = (character.positions(2,index-1)+(character.xSpeed*character.timeInterval));
+                %Update Y location
                 character.positions(3,index) = character.positions(3,index-1)+(character.ySpeed*character.timeInterval);
+                if isGrounded
+                    %Update X location
+                    character.positions(2,index) = character.positions(2,index-1)+(character.xSpeed*character.timeInterval);
+                else
+                    character.positions(2,index) = character.positions(2,index-1)+(character.xSpeed*(1-Character.airResistance)*character.timeInterval);
+                end
                 %check whether or not the character will die
                 if(willCrash(character,character.positions(2,index),character.positions(3,index-1),character.positions(3,index)))
                     %set distance and time
@@ -88,8 +95,8 @@ classdef Character
                     character.positions(3,index:end)=character.positions(3,index);
                     return;
                 end
-                
-                if(~isGroundedNoPos(character))
+                isGrounded = isGroundedNoPos(character);
+                if(~isGrounded)
                     character.ySpeed=character.ySpeed-(character.gravity*character.timeInterval);
                 elseif character.ySpeed<0
                     character.ySpeed=0;
@@ -138,7 +145,7 @@ classdef Character
         %Returns the evolutionary fitness, takes in the relative weighting
         %of factors
         function fitness = calculateFitness(character,distanceWeight,timeWeight,actionWeight)
-            fitness = character.maxDistance*distanceWeight-character.maxTime*timeWeight;
+            fitness = character.maxDistance*distanceWeight-character.maxTime*timeWeight...
             -size(character.actions,2)*actionWeight;
         end
         %compares two characters by fitness (<= operator)
