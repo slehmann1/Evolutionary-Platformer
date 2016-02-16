@@ -31,7 +31,6 @@ end
 %Returns the elements that are less than/equal to the pivot
 function lessOrEqual = getlessOrEqual(characters, pivot)
     lessOrEqual = Character.empty();
-    lessOrEqual(1,size(characters,2))=Character();
     for i=1:size(characters,2)
         if(characters(i)<=pivot)
             lessOrEqual(end+1)=characters(i);

@@ -144,9 +144,12 @@ classdef Character
         end
         %Returns the evolutionary fitness, takes in the relative weighting
         %of factors
-        function fitness = calculateFitness(character,distanceWeight,timeWeight,actionWeight)
+        function fitness = calculateFitness(character,distanceWeight,timeWeight,actionWeight,differentiationFactor)
             fitness = character.maxDistance*distanceWeight-character.maxTime*timeWeight...
-            -size(character.actions,2)*actionWeight;
+                -size(character.actions,2)*actionWeight;
+            %Normalize fitness
+            fitness=fitness/(distanceWeight+timeWeight+actionWeight);
+            fitness=fitness*differentiationFactor;
         end
         %compares two characters by fitness (<= operator)
         function compare = le(a,b)

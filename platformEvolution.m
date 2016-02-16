@@ -25,7 +25,7 @@ classdef platformEvolution
                 m=ActionHandler.randomizedActions();
                 characters(i) = Character(m,obj.level);
                 characters(i)=characters(i).run();
-                characters(i).fitness=characters(i).calculateFitness(1,1,1);
+                characters(i).fitness=characters(i).calculateFitness(1,0,0,10);
             end
             obj.generationCount=1;
             %Iterate more
@@ -56,17 +56,14 @@ classdef platformEvolution
             platform_Evolution.level.drawLevel();
             for i=1:Evolver.generationSize
                 characters(i)=characters(i).run();
-                characters(i).fitness=characters(i).calculateFitness(1,0.1,0);
+                characters(i).fitness=characters(i).calculateFitness(1,0,0,10);
             end
-            
             characters=sortByFitness(characters);
             gen = generation(characters,10);
             platform_Evolution.averageFitness( 1,size(platform_Evolution.averageFitness,2)+1) = gen.averageFitness;
             platform_Evolution.averageFitness( 2,size(platform_Evolution.averageFitness,2)) = size(platform_Evolution.averageFitness,2);
-            
             platform_Evolution.topXAverageFitness( 1,size(platform_Evolution.topXAverageFitness,2)+1) = gen.topXAverageFitness;
             platform_Evolution.topXAverageFitness( 2,size(platform_Evolution.topXAverageFitness,2)) = size(platform_Evolution.topXAverageFitness,2);
-           
             %Draw character graphs
             
             %draws the character's path
@@ -89,7 +86,6 @@ classdef platformEvolution
             platformEvolution.drawGraph(characters,1,2,[0,0,0,0.5]);
             drawnow();
             platform_Evolution.generationCount=platform_Evolution.generationCount+1;
-            
         end
         
     end

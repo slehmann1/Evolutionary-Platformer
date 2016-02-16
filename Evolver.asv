@@ -7,8 +7,8 @@ classdef Evolver
         average=true;
         generationSize=50;
         %If this is true, then the best character will breed with itself
-        numberOfClones=3;
-        mutationRate=0.1;
+        numberOfClones=1;
+        mutationRate=0;
     end
     methods (Static)
         %Start a new generation by evolving
@@ -46,27 +46,31 @@ classdef Evolver
             fitnesses = zeros([1,Evolver.generationSize]);
             fitnesses(1)=characters(1).fitness;
             for index=2:Evolver.generationSize
-                fitnesses(index)= fitnesses(index-1)+characters(index).fitness;
+                fitnesses(index)=fitnesses(index-1)+characters(index).fitness;
             end
             
+            fitnessSum=fitnesses(end);
             %Assign breeding pairs using roulette wheel selection
             for index=1:Evolver.generationSize
                 %Generate the two indices
-                randomFitness = rand*(fitnesses(end)-fitnesses(1))+fitnesses(1);
+                randomFitness = rand*(fitnessSum-characters(1).fitness)+characters(1).fitness;
                 indexA=Evolver.getRouletteWheelIndex(fitnesses,randomFitness);
-                randomFitness = rand*(fitnesses(end)-fitnesses(1))+fitnesses(1);
+                randomFitness = rand*(fitnessSum-characters(1).fitness)+characters(1).fitness;
                 indexB=Evolver.getRouletteWheelIndex(fitnesses,randomFitness);
                 breeders(:,index)=[characters(indexA);characters(indexB)];
                 indices(:,index)=[indexA;indexB];
             end
             
-            
+       
         end
         %Returns an index based on the fitnesses and the chosenFitness
         function index=getRouletteWheelIndex(fitnesses,chosenFitness)
+            currentFitness=0;
             %Determine the index
             for index=1:size(fitnesses,2)
-                if chosenFitness<=fitnesses(index)
+                currentFitness=currentFitn
+                if chosenFitness>=fitnesses(index)
+                    disp(index);
                     return
                 end
             end
