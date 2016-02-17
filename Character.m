@@ -30,6 +30,8 @@ classdef Character
         maxDistance;
         maxTime;
         fitness;
+        %The action point where the character died
+        deathActionIndex=-1;
     end
     
     methods
@@ -68,7 +70,8 @@ classdef Character
             while index<=dimensions(2)
                 
                 character.currentIndex=index;
-                if (actionsIndex<=size(character.actions,2)) && (character.positions(1,index) > character.actions(actionsIndex).time)
+                
+                if (actionsIndex<=size(character.actions,2) && (character.positions(1,index) > character.actions(actionsIndex).time))
                     %the action should be performed
                     character=character.actions(actionsIndex).act(character);
                     actionsIndex=actionsIndex+1;
@@ -93,6 +96,7 @@ classdef Character
                     %set all unevaluated positions to the final position
                     character.positions(2,index:end)=character.positions(2,index);
                     character.positions(3,index:end)=character.positions(3,index);
+                    character.deathActionIndex=actionsIndex;
                     return;
                 end
                 isGrounded = isGroundedNoPos(character);
@@ -144,12 +148,10 @@ classdef Character
         end
         %Returns the evolutionary fitness, takes in the relative weighting
         %of factors
-        function fitness = calculateFitness(character,distanceWeight,timeWeight,actionWeight,differentiationFactor)
-            fitness = character.maxDistance*distanceWeight-character.maxTime*timeWeight...
-                -size(character.actions,2)*actionWeight;
+        function fitness = calculateFitness(character,distanceWeight,timeWeight)
+            fitness = character.maxDistance*distanceWeight+ ((character.maximumAllowedTime-character.maxTime)*timeWeight);
             %Normalize fitness
-            fitness=fitness/(distanceWeight+timeWeight+actionWeight);
-            fitness=fitness*differentiationFactor;
+            fitness=fitness/(distanceWeight+timeWeight);
         end
         %compares two characters by fitness (<= operator)
         function compare = le(a,b)

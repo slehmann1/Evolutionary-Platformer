@@ -3,6 +3,7 @@ classdef platformEvolution
         level;
         averageFitness;
         topXAverageFitness;
+        topFitness;
         generationCount;
     end
     methods (Static)
@@ -21,15 +22,17 @@ classdef platformEvolution
             characters(1,Evolver.generationSize) = Character();
             obj.averageFitness=double.empty(2,0);
             obj.topXAverageFitness=double.empty(2,0);
+            obj.topFitness=double.empty(2,0);
             for i=1:Evolver.generationSize
                 m=ActionHandler.randomizedActions();
                 characters(i) = Character(m,obj.level);
                 characters(i)=characters(i).run();
-                characters(i).fitness=characters(i).calculateFitness(1,0,0,10);
+                characters(i).fitness=characters(i).calculateFitness(1,1);
             end
             obj.generationCount=1;
+            
             %Iterate more
-            for i=1:1000
+            for i=1:100000
                 [obj,characters]= platformEvolution.iterate(obj,characters);
                 characters=Evolver.evolve(characters);
             end
@@ -56,7 +59,7 @@ classdef platformEvolution
             platform_Evolution.level.drawLevel();
             for i=1:Evolver.generationSize
                 characters(i)=characters(i).run();
-                characters(i).fitness=characters(i).calculateFitness(1,0,0,10);
+                characters(i).fitness=characters(i).calculateFitness(1,1);
             end
             characters=sortByFitness(characters);
             gen = generation(characters,10);
@@ -64,6 +67,8 @@ classdef platformEvolution
             platform_Evolution.averageFitness( 2,size(platform_Evolution.averageFitness,2)) = size(platform_Evolution.averageFitness,2);
             platform_Evolution.topXAverageFitness( 1,size(platform_Evolution.topXAverageFitness,2)+1) = gen.topXAverageFitness;
             platform_Evolution.topXAverageFitness( 2,size(platform_Evolution.topXAverageFitness,2)) = size(platform_Evolution.topXAverageFitness,2);
+            platform_Evolution.topFitness( 1,size(platform_Evolution.topFitness,2)+1) = characters(end).fitness;
+            platform_Evolution.topFitness( 2,size(platform_Evolution.topFitness,2)) = size(platform_Evolution.topFitness,2);
             %Draw character graphs
             
             %draws the character's path
@@ -73,7 +78,7 @@ classdef platformEvolution
             subplot(2,2,2);
             line(platform_Evolution.averageFitness(2,:),platform_Evolution.averageFitness(1,:));
             line(platform_Evolution.topXAverageFitness(2,:),platform_Evolution.topXAverageFitness(1,:));
-
+            line(platform_Evolution.topFitness(2,:),platform_Evolution.topFitness(1,:));
             
             
             subplot(2,2,1);

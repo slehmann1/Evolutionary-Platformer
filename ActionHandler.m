@@ -2,7 +2,7 @@ classdef ActionHandler
     %ACTIONHANDLER Summary of this class goes here
     %   Detailed explanation goes here
     properties(Constant)
-        maximumStartActions=10;
+        maximumStartActions=15;
         
         %Matlab doesn't seem to support overriding of properties, which is
         %absolutely infuriating

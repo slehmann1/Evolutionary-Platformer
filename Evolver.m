@@ -5,10 +5,14 @@ classdef Evolver
     properties(Constant)
         %whether or not attributes should be averaged when breeding
         average=true;
-        generationSize=50;
+        generationSize=15;
         %If this is true, then the best character will breed with itself
         numberOfClones=3;
-        mutationRate=0.1;
+        mutationRate=0.05;
+        %Whether or not the level is unsolved-impacts mutation
+        %This isn't a constant, it's static,you've got to love MATLAB with
+        %their constants that arent constant (they're static)
+        unsolved=true;
     end
     methods (Static)
         %Start a new generation by evolving
@@ -33,7 +37,15 @@ classdef Evolver
         end
         function character= mutateCharacter(character)
             %Currently only mutates one point
-            mutationLocation = Evolver.randomInt(1,size(character.actions,2));
+            if Evolver.unsolved
+                mutationLocation = character.deathActionIndex+Evolver.randomInt(0,1);
+                if mutationLocation>size(character.actions,2)
+                    mutationLocation=size(character.actions,2);
+                end
+            else
+                mutationLocation = Evolver.randomInt(1,size(character.actions,2));
+            end
+            
             character.actions(mutationLocation) = ActionHandler.randomAction();
             
         end
@@ -95,8 +107,13 @@ classdef Evolver
                 for i=1:size(offspring,2)
                     actions=breedingPair(1).actions;
                     for ii=2:size(breedingPair(1).actions,2)
-                        actions(ii).speed = (breedingPair(1).actions(ii).speed+breedingPair(2).actions(ii).speed)/2;
-                        actions(ii).time = (breedingPair(1).actions(ii).time+breedingPair(2).actions(ii).time)/2;
+                        try
+                            actions(ii).speed = (breedingPair(1).actions(ii).speed+breedingPair(2).actions(ii).speed)/2;
+                            actions(ii).time = (breedingPair(1).actions(ii).time+breedingPair(2).actions(ii).time)/2;
+                        catch
+                            disp('a');
+                        end
+                        
                     end
                     actions(1) = Move(0,2);
                     actions =ActionHandler.sortActions(actions);
