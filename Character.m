@@ -86,8 +86,22 @@ classdef Character
                 else
                     character.positions(2,index) = character.positions(2,index-1)+(character.xSpeed*(1-Character.airResistance)*character.timeInterval);
                 end
+                if(character.positions(2,index)>=Level.maxXValues)
+                    %The character has reached the end of the level
+                    Evolver.unsolved=false;
+                    %set distance and time
+                    distance = character.positions(2,index);
+                    time=character.positions(1,index);
+                    character.maxDistance =distance;
+                    character.maxTime=time;
+                    %set all unevaluated positions to the final position
+                    character.positions(2,index:end)=character.positions(2,index);
+                    character.positions(3,index:end)=character.positions(3,index);
+                    return;
+                end
                 %check whether or not the character will die
                 if(willCrash(character,character.positions(2,index),character.positions(3,index-1),character.positions(3,index)))
+                    %HAS DIED
                     %set distance and time
                     distance = character.positions(2,index);
                     time=character.positions(1,index);
