@@ -6,7 +6,7 @@ classdef Level
         %impacts the vertical stretch
         bufferValue=1;
         %the number of x values
-        maxXValues=50;
+        maxXValues=100;
         %the spacing horizontally of the stairs
         stairSpacing=5;
         %minimum difference between stair heights

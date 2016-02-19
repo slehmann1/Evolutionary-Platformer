@@ -8,11 +8,11 @@ classdef Evolver
         generationSize=15;
         %If this is true, then the best character will breed with itself
         numberOfClones=3;
-        mutationRate=0.05;
-        %Whether or not the level is unsolved-impacts mutation
-        %This isn't a constant, it's static,you've got to love MATLAB with
-        %their constants that arent constant (they're static)
-        unsolved=true;
+        mutationRate=0.2;
+        %The probabilities of adding/removing an action(out of one),
+        %otherwise it is changed
+        addActionRate=0.8;
+        removeActionRate=0;
     end
     methods (Static)
         %Start a new generation by evolving
@@ -36,17 +36,25 @@ classdef Evolver
             end
         end
         function character= mutateCharacter(character)
-            %Currently only mutates one point
-            if Evolver.unsolved
-                mutationLocation = character.deathActionIndex+Evolver.randomInt(0,1);
-                if mutationLocation>size(character.actions,2)
-                    mutationLocation=size(character.actions,2);
+            
+            %Choose the mutation type
+            mutationType = rand;
+            if mutationType<=Evolver.addActionRate %Add an action
+                character.actions(end+1) = ActionHandler.randomAction();
+            elseif mutationType<=(Evolver.removeActionRate-Evolver.addActionRate) %Remove the action
+                if size(character.actions,2)>=2
+                    mutationLocation = Evolver.randomInt(2,size(character.actions,2));
+                    %Delete the element
+                    character.actions(mutationLocation) = [];
                 end
-            else
-                mutationLocation = Evolver.randomInt(1,size(character.actions,2));
+            else %Change the action
+                %Currently only mutates one point
+                if size(character.actions,2)>=1
+                    mutationLocation = Evolver.randomInt(2,size(character.actions,2));
+                    character.actions(mutationLocation) = ActionHandler.randomAction();
+                end
             end
             
-            character.actions(mutationLocation) = ActionHandler.randomAction();
             
         end
         %Uses roulette wheel selection (proportional to fitness)

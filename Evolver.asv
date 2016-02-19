@@ -5,10 +5,14 @@ classdef Evolver
     properties(Constant)
         %whether or not attributes should be averaged when breeding
         average=true;
-        generationSize=50;
+        generationSize=15;
         %If this is true, then the best character will breed with itself
-        numberOfClones=1;
-        mutationRate=0;
+        numberOfClones=3;
+        mutationRate=0.05;
+        %The probabilities of adding/removing an action(out of one),
+        %otherwise it is changed
+        addActionRate=0.2;
+        removeActionRate=0.2;
     end
     methods (Static)
         %Start a new generation by evolving
@@ -32,9 +36,27 @@ classdef Evolver
             end
         end
         function character= mutateCharacter(character)
-            %Currently only mutates one point
-            mutationLocation = Evolver.randomInt(1,size(character.actions,2));
-            character.actions(mutationLocation) = ActionHandler.randomAction();
+            
+            %Choose the mutation type
+            mutationType = rand;
+            if mutationType<=Evolver.addActionRate %Add an action
+                
+            elseif mutationType<=(Evolver.removeActionRate-Evolver.addActionRate) %Remove the action
+                if size(character.actions,2)>=1
+                    
+                    %Delete the element
+                    character.actions(end) = [];
+                end
+            else %Change the action
+                %Currently only mutates one point
+                mutationLocation = character.deathActionIndex+Evolver.randomInt(0,1);
+                if mutationLocation>size(character.actions,2)
+                    mutationLocation=size(character.actions,2);
+                end
+                
+                character.actions(mutationLocation) = ActionHandler.randomAction();
+            end
+            
             
         end
         %Uses roulette wheel selection (proportional to fitness)
@@ -46,31 +68,27 @@ classdef Evolver
             fitnesses = zeros([1,Evolver.generationSize]);
             fitnesses(1)=characters(1).fitness;
             for index=2:Evolver.generationSize
-                fitnesses(index)=fitnesses(index-1)+characters(index).fitness;
+                fitnesses(index)= fitnesses(index-1)+characters(index).fitness;
             end
             
-            fitnessSum=fitnesses(end);
             %Assign breeding pairs using roulette wheel selection
             for index=1:Evolver.generationSize
                 %Generate the two indices
-                randomFitness = rand*(fitnessSum-characters(1).fitness)+characters(1).fitness;
+                randomFitness = rand*(fitnesses(end)-fitnesses(1))+fitnesses(1);
                 indexA=Evolver.getRouletteWheelIndex(fitnesses,randomFitness);
-                randomFitness = rand*(fitnessSum-characters(1).fitness)+characters(1).fitness;
+                randomFitness = rand*(fitnesses(end)-fitnesses(1))+fitnesses(1);
                 indexB=Evolver.getRouletteWheelIndex(fitnesses,randomFitness);
                 breeders(:,index)=[characters(indexA);characters(indexB)];
                 indices(:,index)=[indexA;indexB];
             end
             
-       
+            
         end
         %Returns an index based on the fitnesses and the chosenFitness
         function index=getRouletteWheelIndex(fitnesses,chosenFitness)
-            currentFitness=0;
             %Determine the index
             for index=1:size(fitnesses,2)
-                currentFitness=currentFitn
-                if chosenFitness>=fitnesses(index)
-                    disp(index);
+                if chosenFitness<=fitnesses(index)
                     return
                 end
             end
@@ -99,8 +117,13 @@ classdef Evolver
                 for i=1:size(offspring,2)
                     actions=breedingPair(1).actions;
                     for ii=2:size(breedingPair(1).actions,2)
-                        actions(ii).speed = (breedingPair(1).actions(ii).speed+breedingPair(2).actions(ii).speed)/2;
-                        actions(ii).time = (breedingPair(1).actions(ii).time+breedingPair(2).actions(ii).time)/2;
+                        try
+                            actions(ii).speed = (breedingPair(1).actions(ii).speed+breedingPair(2).actions(ii).speed)/2;
+                            actions(ii).time = (breedingPair(1).actions(ii).time+breedingPair(2).actions(ii).time)/2;
+                        catch
+                            disp('a');
+                        end
+                        
                     end
                     actions(1) = Move(0,2);
                     actions =ActionHandler.sortActions(actions);

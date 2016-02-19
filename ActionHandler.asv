@@ -63,7 +63,7 @@ classdef ActionHandler
             %Unfortunately, Matlab doesn't seem to support generics, there
             %must be a better way to do this. Check Later
             actionType = rand();
-            time = rand(1)*Character.maximumAllowedTime;
+            time = rand(1)*character.maximumumAlloe;
             if(actionType<ActionHandler.moveProbability)
                 action=Move(time,rand(1)*Move.maxSpeed);
             else
@@ -75,7 +75,7 @@ classdef ActionHandler
             %Unfortunately, Matlab doesn't seem to support generics, there
             %must be a better way to do this. Check Later
             actionType = rand();
-            time = rand(1)*Character.maximumAllowedTime;
+            time = rand(1)*Action.maxTime;
             if(actionType<ActionHandler.moveProbability)
                 action=Move(time,rand(1)*Move.maxSpeed);
             else

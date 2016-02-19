@@ -6,7 +6,7 @@ classdef Character
         % thus it is asssumed that it has no width
         height =0;
         %The maximum amount of time a character is allowed in seconds
-        maximumAllowedTime=30;
+        maximumAllowedTime=55;
         %The difference in times for each calculated position (seconds)
         timeInterval =0.2;
         %the acceleration in gravity in m/s^2
@@ -162,10 +162,11 @@ classdef Character
         end
         %Returns the evolutionary fitness, takes in the relative weighting
         %of factors
-        function fitness = calculateFitness(character,distanceWeight,timeWeight)
+        function fitness = calculateFitness(character,distanceWeight,timeWeight,exponentiationFactor)
             fitness = character.maxDistance*distanceWeight+ ((character.maximumAllowedTime-character.maxTime)*timeWeight);
             %Normalize fitness
             fitness=fitness/(distanceWeight+timeWeight);
+            fitness=fitness^exponentiationFactor;
         end
         %compares two characters by fitness (<= operator)
         function compare = le(a,b)
