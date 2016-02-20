@@ -7,12 +7,12 @@ classdef Evolver
         average=true;
         generationSize=15;
         %If this is true, then the best character will breed with itself
-        numberOfClones=3;
+        numberOfClones=1;
         mutationRate=0.2;
         %The probabilities of adding/removing an action(out of one),
         %otherwise it is changed
-        addActionRate=0.8;
-        removeActionRate=0;
+        addActionRate=0.6;
+        removeActionRate=0.1;
     end
     methods (Static)
         %Start a new generation by evolving

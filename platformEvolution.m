@@ -27,7 +27,7 @@ classdef platformEvolution
                 m=ActionHandler.randomizedActions();
                 characters(i) = Character(m,obj.level);
                 characters(i)=characters(i).run();
-                characters(i).fitness=characters(i).calculateFitness(1,1,20);
+                characters(i).fitness=characters(i).calculateFitness(1,1,1,20);
             end
             obj.generationCount=1;
             
@@ -60,7 +60,7 @@ classdef platformEvolution
             platform_Evolution.level.drawLevel();
             for i=1:Evolver.generationSize
                 characters(i)=characters(i).run();
-                characters(i).fitness=characters(i).calculateFitness(1,1,20);
+                characters(i).fitness=characters(i).calculateFitness(1,1,1,20);
             end
             characters=sortByFitness(characters);
             gen = generation(characters,10);

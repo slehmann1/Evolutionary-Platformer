@@ -16,6 +16,7 @@ classdef Jump <Action
         function character = act(action,character)
             if(character.isGroundedNoPos())
                 character.ySpeed =action.speed;
+                character.totalForce = character.totalForce+action.speed;
             end
         end
     end

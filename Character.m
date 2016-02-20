@@ -14,7 +14,7 @@ classdef Character
         %Helps account for imprecision
         fudgeFactor=0.2;
         %The speed reduction from being airborne
-        airResistance = 0.1;
+        airResistance = 0.2;
     end
     properties
         %all of the actions that the character performs
@@ -32,6 +32,12 @@ classdef Character
         fitness;
         %The action point where the character died
         deathActionIndex=-1;
+        
+        %The sum of all of the forces applied, relates to energy
+        %expenditure. Could also do it properly measuring the total
+        %altitude gains and using mgh to get energy expenditure, but i'm
+        %lazy
+        totalForce=0;
     end
     
     methods
@@ -52,6 +58,7 @@ classdef Character
         function character=run(character)
             %Starts Grounded
             isGrounded=true;
+            character.totalForce=0;
             character.xSpeed=0;
             character.ySpeed=0;
             character.currentIndex=0;
@@ -162,10 +169,9 @@ classdef Character
         end
         %Returns the evolutionary fitness, takes in the relative weighting
         %of factors
-        function fitness = calculateFitness(character,distanceWeight,timeWeight,exponentiationFactor)
-            fitness = character.maxDistance*distanceWeight+ ((character.maximumAllowedTime-character.maxTime)*timeWeight);
-            %Normalize fitness
-            fitness=fitness/(distanceWeight+timeWeight);
+        function fitness = calculateFitness(character,distanceWeight,timeWeight,forceWeight,exponentiationFactor)
+            fitness = character.maxDistance*distanceWeight+ ((character.maximumAllowedTime-character.maxTime)*timeWeight)...
+                -character.totalForce/20*forceWeight;
             fitness=fitness^exponentiationFactor;
         end
         %compares two characters by fitness (<= operator)
