@@ -114,7 +114,7 @@ classdef Evolver
                             actions(ii).speed = (breedingPair(1).actions(ii).speed+breedingPair(2).actions(ii).speed)/2;
                             actions(ii).time = (breedingPair(1).actions(ii).time+breedingPair(2).actions(ii).time)/2;
                         catch
-                            disp('a');
+                      
                         end
                         
                     end
