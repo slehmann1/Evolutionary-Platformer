@@ -2,17 +2,11 @@ classdef Level
     %Level Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties(Constant)
+
+    properties (Constant)
+        
         %impacts the vertical stretch
         bufferValue=1;
-        %the number of x values
-        maxXValues=100;
-        %the spacing horizontally of the stairs
-        stairSpacing=5;
-        %minimum difference between stair heights
-        minStairDiff=0.2;
-        %maximum difference between stair heights
-        maxStairDiff=1;
     end
     properties
         %The maximum/minimum chart axis values
@@ -27,8 +21,9 @@ classdef Level
             
         %constructor
         function level=Level()
+            global levelConfig;
             %generate x values
-            level.x=0:level.stairSpacing:level.maxXValues;
+            level.x=0:levelConfig.maxStairWidth:levelConfig.maxXValues;
             level.y(1)=0;
             
             minAxisValue =0;
@@ -36,9 +31,9 @@ classdef Level
             %generate y values
             for i=2:numel(level.x)
                 %compute the difference in stair height
-                level.y(i)=(rand()-0.5)*2*level.maxStairDiff;
+                level.y(i)=(rand()-0.5)*2*levelConfig.maxStairHeight;
                 %check whether the distance is large enough
-                if(abs(level.y(i))>level.minStairDiff)
+                if(abs(level.y(i))>levelConfig.minStairHeight)
                     level.y(i) = level.y(i-1)+level.y(i);                
                 else
                     level.y(i) = level.y(i-1);
@@ -62,15 +57,16 @@ classdef Level
         end
         %Returns the y value at a specific x
         function y=getY(level,xpos)
+            global levelConfig;
             %convert to int
             xpos=floor(xpos);
             %because x starts at 0
-            xpos=xpos+level.stairSpacing;
+            xpos=xpos+levelConfig.maxStairWidth;
             %if remainder
-            if(mod(xpos,level.stairSpacing)~=0)
-                xpos=xpos-mod(xpos,level.stairSpacing);
+            if(mod(xpos,levelConfig.maxStairWidth)~=0)
+                xpos=xpos-mod(xpos,levelConfig.maxStairWidth);
             end
-            y=level.y(xpos/level.stairSpacing);
+            y=level.y(xpos/levelConfig.maxStairWidth);
         end
          
     end

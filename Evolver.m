@@ -5,30 +5,24 @@ classdef Evolver
     properties(Constant)
         %whether or not attributes should be averaged when breeding
         average=true;
-        generationSize=15;
-        %If this is true, then the best character will breed with itself
-        numberOfClones=1;
-        mutationRate=0.2;
-        %The probabilities of adding/removing an action(out of one),
-        %otherwise it is changed
-        addActionRate=0.6;
-        removeActionRate=0.1;
     end
     methods (Static)
         %Start a new generation by evolving
         function characters = evolve(characters)
-            clones = characters(Evolver.generationSize-Evolver.numberOfClones+1:Evolver.generationSize);
+            global evolverConfig;
+            clones = characters(evolverConfig.generationSize-evolverConfig.numberOfClones+1:evolverConfig.generationSize);
             characters = Evolver.selectBreedingPairs(characters);
             characters = Evolver.breed(characters);
             characters = Evolver.mutate(characters);
-            if Evolver.numberOfClones>0
-                characters((Evolver.generationSize-Evolver.numberOfClones+1):Evolver.generationSize)=clones;
+            if evolverConfig.numberOfClones>0
+                characters((evolverConfig.generationSize-evolverConfig.numberOfClones+1):evolverConfig.generationSize)=clones;
             end
         end
         function characters = mutate(characters)
+            global evolverConfig;
             startPoint =1;
             for i=startPoint:size(characters,2)
-                if(rand<=Evolver.mutationRate)
+                if(rand<=evolverConfig.mutationRate)
                     %Mutate
                     characters(i)=Evolver.mutateCharacter(characters(i));
                 end
@@ -36,12 +30,12 @@ classdef Evolver
             end
         end
         function character= mutateCharacter(character)
-            
+            global evolverConfig;
             %Choose the mutation type
             mutationType = rand;
-            if mutationType<=Evolver.addActionRate %Add an action
+            if mutationType<=evolverConfig.addActionRate %Add an action
                 character.actions(end+1) = ActionHandler.randomAction();
-            elseif mutationType<=(Evolver.removeActionRate-Evolver.addActionRate) %Remove the action
+            elseif mutationType<=(evolverConfig.removeActionRate-evolverConfig.addActionRate) %Remove the action
                 if size(character.actions,2)>=2
                     mutationLocation = Evolver.randomInt(2,size(character.actions,2));
                     %Delete the element
@@ -59,18 +53,19 @@ classdef Evolver
         end
         %Uses roulette wheel selection (proportional to fitness)
         function breeders = selectBreedingPairs (characters)
+            global evolverConfig;
             %Preallocate breeders
             breeders = [characters; characters];
             indices = zeros(size(breeders));
             %Generate a cumulative fitness list
-            fitnesses = zeros([1,Evolver.generationSize]);
+            fitnesses = zeros([1,evolverConfig.generationSize]);
             fitnesses(1)=characters(1).fitness;
-            for index=2:Evolver.generationSize
+            for index=2:evolverConfig.generationSize
                 fitnesses(index)= fitnesses(index-1)+characters(index).fitness;
             end
             
             %Assign breeding pairs using roulette wheel selection
-            for index=1:Evolver.generationSize
+            for index=1:evolverConfig.generationSize
                 %Generate the two indices
                 randomFitness = rand*(fitnesses(end)-fitnesses(1))+fitnesses(1);
                 indexA=Evolver.getRouletteWheelIndex(fitnesses,randomFitness);

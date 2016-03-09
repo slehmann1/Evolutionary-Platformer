@@ -3,8 +3,7 @@ classdef Jump <Action
     %   Detailed explanation goes here
     properties(Constant)
         %the maximum speed allowed
-        maxSpeed = 5;
-        minSpeed = 3;
+        minSpeed = 1;
     end
 
     

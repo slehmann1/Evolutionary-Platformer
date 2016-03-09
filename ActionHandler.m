@@ -10,9 +10,10 @@ classdef ActionHandler
     end
     methods (Static)
         function  actions = randomizedActions()
+            global charConfig;
             numberActions = ActionHandler.randomInt(1,ActionHandler.maximumStartActions);
             actions(1,numberActions) = Action();
-            actions(1) = Move(0,2);
+            actions(1) = Move(0,charConfig.startSpeed);
             for i=2:numberActions
                 actions(i)=ActionHandler.randomAction();
             end
@@ -72,6 +73,7 @@ classdef ActionHandler
         end
         %A random action, with no time limitations
         function action = randomAction()
+            global charConfig;
             %Unfortunately, Matlab doesn't seem to support generics, there
             %must be a better way to do this. Check Later
             actionType = rand();
@@ -79,7 +81,7 @@ classdef ActionHandler
             if(actionType<ActionHandler.moveProbability)
                 action=Move(time,rand(1)*Move.maxSpeed);
             else
-                action=Jump(time,rand(1)*(Jump.maxSpeed-Jump.minSpeed)+Jump.minSpeed);
+                action=Jump(time,rand(1)*(charConfig.maxJumpHeight-Jump.minSpeed)+Jump.minSpeed);
             end  
         end
         function int = randomInt(startInt,endInt)
