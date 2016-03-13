@@ -9,20 +9,20 @@ classdef Evolver
     methods (Static)
         %Start a new generation by evolving
         function characters = evolve(characters)
-            global evolverConfig;
-            clones = characters(evolverConfig.generationSize-evolverConfig.numberOfClones+1:evolverConfig.generationSize);
+            global EVOLVERCONFIG;
+            clones = characters(EVOLVERCONFIG.generationSize-EVOLVERCONFIG.numberOfClones+1:EVOLVERCONFIG.generationSize);
             characters = Evolver.selectBreedingPairs(characters);
             characters = Evolver.breed(characters);
             characters = Evolver.mutate(characters);
-            if evolverConfig.numberOfClones>0
-                characters((evolverConfig.generationSize-evolverConfig.numberOfClones+1):evolverConfig.generationSize)=clones;
+            if EVOLVERCONFIG.numberOfClones>0
+                characters((EVOLVERCONFIG.generationSize-EVOLVERCONFIG.numberOfClones+1):EVOLVERCONFIG.generationSize)=clones;
             end
         end
         function characters = mutate(characters)
-            global evolverConfig;
+            global EVOLVERCONFIG;
             startPoint =1;
             for i=startPoint:size(characters,2)
-                if(rand<=evolverConfig.mutationRate)
+                if(rand<=EVOLVERCONFIG.mutationRate)
                     %Mutate
                     characters(i)=Evolver.mutateCharacter(characters(i));
                 end
@@ -30,12 +30,12 @@ classdef Evolver
             end
         end
         function character= mutateCharacter(character)
-            global evolverConfig;
+            global EVOLVERCONFIG;
             %Choose the mutation type
             mutationType = rand;
-            if mutationType<=evolverConfig.addActionRate %Add an action
+            if mutationType<=EVOLVERCONFIG.addActionRate %Add an action
                 character.actions(end+1) = ActionHandler.randomAction();
-            elseif mutationType<=(evolverConfig.removeActionRate-evolverConfig.addActionRate) %Remove the action
+            elseif mutationType<=(EVOLVERCONFIG.removeActionRate-EVOLVERCONFIG.addActionRate) %Remove the action
                 if size(character.actions,2)>=2
                     mutationLocation = Evolver.randomInt(2,size(character.actions,2));
                     %Delete the element
@@ -43,29 +43,32 @@ classdef Evolver
                 end
             else %Change the action
                 %Currently only mutates one point
-                if size(character.actions,2)>=1
+                if size(character.actions,2)>1
                     mutationLocation = Evolver.randomInt(2,size(character.actions,2));
-                    character.actions(mutationLocation) = ActionHandler.randomAction();
+
+                        character.actions(mutationLocation) = ActionHandler.mutateAction(character.actions(mutationLocation));
+
                 end
             end
+            
             
             
         end
         %Uses roulette wheel selection (proportional to fitness)
         function breeders = selectBreedingPairs (characters)
-            global evolverConfig;
+            global EVOLVERCONFIG;
             %Preallocate breeders
             breeders = [characters; characters];
             indices = zeros(size(breeders));
             %Generate a cumulative fitness list
-            fitnesses = zeros([1,evolverConfig.generationSize]);
+            fitnesses = zeros([1,EVOLVERCONFIG.generationSize]);
             fitnesses(1)=characters(1).fitness;
-            for index=2:evolverConfig.generationSize
+            for index=2:EVOLVERCONFIG.generationSize
                 fitnesses(index)= fitnesses(index-1)+characters(index).fitness;
             end
             
             %Assign breeding pairs using roulette wheel selection
-            for index=1:evolverConfig.generationSize
+            for index=1:EVOLVERCONFIG.generationSize
                 %Generate the two indices
                 randomFitness = rand*(fitnesses(end)-fitnesses(1))+fitnesses(1);
                 indexA=Evolver.getRouletteWheelIndex(fitnesses,randomFitness);
@@ -114,7 +117,7 @@ classdef Evolver
                             actions(ii).speed = (breedingPair(1).actions(ii).speed+breedingPair(2).actions(ii).speed)/2;
                             actions(ii).time = (breedingPair(1).actions(ii).time+breedingPair(2).actions(ii).time)/2;
                         catch
-                      
+                            
                         end
                         
                     end

@@ -5,7 +5,7 @@ classdef Jump <Action
         %the maximum speed allowed
         minSpeed = 1;
     end
-
+    
     
     methods
         function jump=Jump(time,speed)
@@ -13,10 +13,10 @@ classdef Jump <Action
             jump.speed=speed;
         end
         function character = act(action,character)
-            if(character.isGroundedNoPos())
-                character.ySpeed =action.speed;
-                character.totalForce = character.totalForce+action.speed;
-            end
+            
+            character.ySpeed =action.speed;
+            character.totalForce = character.totalForce+action.speed;
+            
         end
     end
     

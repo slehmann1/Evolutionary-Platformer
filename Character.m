@@ -24,6 +24,7 @@ classdef Character
         maxDistance;
         maxTime;
         fitness;
+        undifferentiatedFitness;
         %The action point where the character died
         deathActionIndex=-1;
         
@@ -37,30 +38,30 @@ classdef Character
     methods
         
         function character = Character(actions,level)
-            global charConfig;
+            global CHARCONFIG;
             if nargin >0
                 character.actions = actions;
                 character.level=level;
                 
                 %Initialize the positions
-                character.positions = [0:charConfig.timeInterval:character.maximumAllowedTime; ...
-                    0:charConfig.timeInterval:character.maximumAllowedTime;...
-                    0:charConfig.timeInterval:character.maximumAllowedTime;];
+                character.positions = [0:CHARCONFIG.timeInterval:character.maximumAllowedTime; ...
+                    0:CHARCONFIG.timeInterval:character.maximumAllowedTime;...
+                    0:CHARCONFIG.timeInterval:character.maximumAllowedTime;];
                 character.positions(2,:)=0;
                 character.positions(3,:)=character.height/2;
             end
         end
         function character=run(character)
-            global levelConfig charConfig;
+            global LEVELCONFIG CHARCONFIG;
             %Starts Grounded
             isGrounded=true;
             character.totalForce=0;
             character.xSpeed=0;
             character.ySpeed=0;
             character.currentIndex=0;
-            character.positions = [0:charConfig.timeInterval:character.maximumAllowedTime; ...
-                0:charConfig.timeInterval:character.maximumAllowedTime;...
-                0:charConfig.timeInterval:character.maximumAllowedTime;];
+            character.positions = [0:CHARCONFIG.timeInterval:character.maximumAllowedTime; ...
+                0:CHARCONFIG.timeInterval:character.maximumAllowedTime;...
+                0:CHARCONFIG.timeInterval:character.maximumAllowedTime;];
             character.positions(2,:)=0;
             character.positions(3,:)=character.height/2;
             actionsIndex=1;
@@ -70,11 +71,13 @@ classdef Character
             %start at 2 so that the first is the starting point
             index=2;
             character.currentIndex=index;
+            %Cache this to prevent computing repeatedly
+            actionsLength = size(character.actions,2);
             while index<=dimensions(2)
                 
                 character.currentIndex=index;
                 
-                if (actionsIndex<=size(character.actions,2) && (character.positions(1,index) > character.actions(actionsIndex).time))
+                if (actionsIndex<=actionsLength && (character.positions(1,index) > character.actions(actionsIndex).time))
                     %the action should be performed
                     character=character.actions(actionsIndex).act(character);
                     actionsIndex=actionsIndex+1;
@@ -82,14 +85,14 @@ classdef Character
                 
                 
                 %Update Y location
-                character.positions(3,index) = character.positions(3,index-1)+(character.ySpeed*charConfig.timeInterval);
+                character.positions(3,index) = character.positions(3,index-1)+(character.ySpeed*CHARCONFIG.timeInterval);
                 if isGrounded
                     %Update X location
-                    character.positions(2,index) = character.positions(2,index-1)+(character.xSpeed*charConfig.timeInterval);
+                    character.positions(2,index) = character.positions(2,index-1)+(character.xSpeed*CHARCONFIG.timeInterval);
                 else
-                    character.positions(2,index) = character.positions(2,index-1)+(character.xSpeed*(1-charConfig.airResistance)*charConfig.timeInterval);
+                    character.positions(2,index) = character.positions(2,index-1)+(character.xSpeed*(1-CHARCONFIG.airResistance)*CHARCONFIG.timeInterval);
                 end
-                if(character.positions(2,index)>=levelConfig.maxXValues)
+                if(character.positions(2,index)>=LEVELCONFIG.maxXValues)
                     %The character has reached the end of the level
                     Evolver.unsolved=false;
                     %set distance and time
@@ -103,7 +106,7 @@ classdef Character
                     return;
                 end
                 %check whether or not the character will die
-                if(willCrash(character,character.positions(2,index),character.positions(3,index-1),character.positions(3,index)))
+                if(willCrash(character,LEVELCONFIG.maxStairWidth,character.positions(2,index),character.positions(3,index-1),character.positions(3,index)))
                     %HAS DIED
                     %set distance and time
                     distance = character.positions(2,index);
@@ -116,13 +119,13 @@ classdef Character
                     character.deathActionIndex=actionsIndex;
                     return;
                 end
-                isGrounded = isGroundedNoPos(character);
+                isGrounded = isGroundedNoPos(character,LEVELCONFIG.maxStairWidth);
                 if(~isGrounded)
-                    character.ySpeed=character.ySpeed-(charConfig.gravity*charConfig.timeInterval);
+                    character.ySpeed=character.ySpeed-(CHARCONFIG.gravity*CHARCONFIG.timeInterval);
                 elseif character.ySpeed<0
                     character.ySpeed=0;
                     %set to ground height
-                    character.positions(3,index) = character.level.getY(character.positions(2,index))+character.height/2;
+                    character.positions(3,index) = character.level.getY(LEVELCONFIG.maxStairWidth,character.positions(2,index))+character.height/2;
                 end
                 
                 index=index+1;
@@ -135,8 +138,8 @@ classdef Character
             character.maxTime=time;
         end
         
-        function grounded=isGrounded(character,xPos,yPos)
-            if(character.level.getY(xPos)==(yPos-character.height))
+        function grounded=isGrounded(character,maxStairWidth,xPos,yPos)
+            if(character.level.getY(maxStairWidth,xPos)==(yPos-character.height))
                 grounded=1;
                 return;
             end
@@ -144,15 +147,15 @@ classdef Character
         end
         %For some raisin, Matlab doesn't support overloading... It better
         %be a really good raisin.
-        function grounded=isGroundedNoPos(character)
-            if(character.level.getY(character.positions(2,character.currentIndex))-(character.positions(3,character.currentIndex)-character.height/2))>=-character.fudgeFactor
+        function grounded=isGroundedNoPos(character,maxStairWidth)
+            if(character.level.getY(maxStairWidth,character.positions(2,character.currentIndex))-(character.positions(3,character.currentIndex)-character.height/2))>=-character.fudgeFactor
                 grounded=1;
                 return;
             end
             grounded=0;
         end
-        function willDie = willCrash(character, xPos,oldY,newY)
-            lvlHeight = character.level.getY(xPos);
+        function willDie = willCrash(character,maxStairWidth, xPos,oldY,newY)
+            lvlHeight = character.level.getY(maxStairWidth,xPos);
             if(lvlHeight<=(newY-character.height/2+character.fudgeFactor))
                 willDie=0;
                 return;
@@ -165,11 +168,11 @@ classdef Character
         end
         %Returns the evolutionary fitness, takes in the relative weighting
         %of factors
-        function fitness = calculateFitness(character)
+        function [fitness,undifferentiatedFitness] = calculateFitness(character)
             global FITNESSCONFIG;
-            fitness = character.maxDistance*FITNESSCONFIG.distanceWeight+ ((character.maximumAllowedTime-character.maxTime)*FITNESSCONFIG.timeWeight)...
+            undifferentiatedFitness = character.maxDistance*FITNESSCONFIG.distanceWeight+ ((character.maximumAllowedTime-character.maxTime)*FITNESSCONFIG.timeWeight)...
                 -character.totalForce/20*FITNESSCONFIG.energyWeight;
-            fitness=fitness^FITNESSCONFIG.diffFactor;
+            fitness=undifferentiatedFitness^FITNESSCONFIG.diffFactor;
         end
         %compares two characters by fitness (<= operator)
         function compare = le(a,b)
