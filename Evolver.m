@@ -45,9 +45,10 @@ classdef Evolver
                 %Currently only mutates one point
                 if size(character.actions,2)>1
                     mutationLocation = Evolver.randomInt(2,size(character.actions,2));
-
-                        character.actions(mutationLocation) = ActionHandler.mutateAction(character.actions(mutationLocation));
-
+                    character.actions(mutationLocation) = ActionHandler.mutateAction(character.actions(mutationLocation));
+                else %Can't mutate action, add one instead
+                    character.actions(end+1) = ActionHandler.randomAction();
+                    
                 end
             end
             

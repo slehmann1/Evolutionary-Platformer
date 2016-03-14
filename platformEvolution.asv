@@ -93,19 +93,21 @@ classdef platformEvolution
             global AXES;
             
             updatePlot(platform_Evolution.generationCount,iterationTime);
-            
-            num=0;
-            %Do some basic caching
-            for i=1:EVOLVERCONFIG.generationSize-1
-                if characters(i)~=characters(end)
+            %setupPlot(Character.maximumAllowedTime,platform_Evolution.level,platform_Evolution.generationCount,iterationTime);
+            characters()=characters(1).run();
+            [characters(1).fitness, characters(1).undifferentiatedFitness]=characters(1).calculateFitness();
+         
+            for i=1:EVOLVERCONFIG.generationSize
+                disp( [num2str(length(characters(i).actions)) num2str(length(characters(2).actions))]);
+                if characters(i)~=characters(1)
                     characters(i)=characters(i).run();
-                    num=num+1;
                 else
-                    characters(i)=characters(end);
+                    characters(i)=characters(1);
                 end
                 [characters(i).fitness, characters(i).undifferentiatedFitness]=characters(i).calculateFitness();
+         
             end
-            disp(num);
+            
             characters=sortByFitness(characters);
             
             

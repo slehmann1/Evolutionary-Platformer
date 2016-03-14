@@ -97,6 +97,7 @@ function seed_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+set(hObject,'string',num2str(platformEvolution.defaultSeed));
 
 
 % --- Executes on button press in pushbutton2.

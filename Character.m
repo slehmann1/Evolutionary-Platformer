@@ -8,7 +8,7 @@ classdef Character
         %The maximum amount of time a character is allowed in seconds
         maximumAllowedTime=55;
         %Helps account for imprecision
-        fudgeFactor=0.2;
+        fudgeFactor=0;
     end
     properties
         %all of the actions that the character performs
@@ -212,6 +212,20 @@ classdef Character
             if a.fitness==b.fitness
                 compare =1;
                 return;
+            end
+            compare = 0;
+        end
+        
+        %compares two characters by actions (~= operator)
+        function compare = ne(a,b)
+            compare =1;
+            if length(a.actions)~=length(b.actions)
+                return;
+            end
+            for i=1:length(a.actions)
+                if a.actions(i)~=b.actions(i)
+                    return
+                end
             end
             compare = 0;
         end

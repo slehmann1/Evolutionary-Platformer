@@ -9,7 +9,6 @@ set(TITLEBOX,'String',['Generation number ' num2str(generationNumber)]);
 set(TITLEBOX,'Position',[pos(3)/2-100 pos(4)-30 250 30]);
 global GENERATIONBOX
 %Generation time
-set(GENERATIONBOX,'String',['Iteration time ' num2str(iterationTime) ' seconds']);
-set(GENERATIONBOX,'Position',[0 0 150 20]);
+set(GENERATIONBOX,'String',['Iteration time: ' num2str(iterationTime) ' seconds']);
 end
 

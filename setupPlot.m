@@ -18,10 +18,10 @@ set(TITLEBOX,'Position',[pos(3)/2-100 pos(4)-30 250 30]);
 global GENERATIONBOX
 %Generation time
 GENERATIONBOX = uicontrol('style','text');
-set(GENERATIONBOX,'FontSize',8);
+set(GENERATIONBOX,'FontSize',10);
 set(GENERATIONBOX,'HorizontalAlignment','center');
 set(GENERATIONBOX,'String',['Iteration time ' num2str(iterationTime) ' seconds']);
-set(GENERATIONBOX,'Position',[0 0 150 20]);
+set(GENERATIONBOX,'Position',[0 0 200 20]);
 
 global AXES;
 

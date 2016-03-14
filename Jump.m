@@ -18,6 +18,7 @@ classdef Jump <Action
             character.totalForce = character.totalForce+action.speed;
             
         end
+        
     end
     
 end
