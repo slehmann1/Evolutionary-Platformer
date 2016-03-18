@@ -1,8 +1,6 @@
 Evolutionary Platformer
 developed by Samuel Lehmann for the University of Alberta's ENCMP 100 Programming Competition in 2016 (undergraduate-first year)
 
-SOURCE CODE AT: https://github.com/slehmann1/Evolutionary-Platformer
-
 COPYRIGHT INFO: Feel free to copy, plagiarize, steal, and do what you wish with this project. Crediting me would be nice, but I will survive
 if you don't.
 
