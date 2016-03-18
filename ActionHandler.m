@@ -69,7 +69,7 @@ classdef ActionHandler
                 action=Move(time,rand(1)*Move.maxSpeed);
             else
                 action=Jump(time,rand(1)*(Jump.maxSpeed-Jump.minSpeed)+Jump.minSpeed);
-            end  
+            end
         end
         %A random action, with no time limitations
         function action = randomAction()
@@ -82,7 +82,7 @@ classdef ActionHandler
                 action=Move(time,rand(1)*Move.maxSpeed);
             else
                 action=Jump(time,rand(1)*(CHARCONFIG.maxJumpHeight-Jump.minSpeed)+Jump.minSpeed);
-            end  
+            end
         end
         %Mutates an individual aciton
         function action = mutateAction(initialAction)
@@ -92,7 +92,7 @@ classdef ActionHandler
             %Mutate time
             if rand()>0.5
                 time = rand(1)*Character.maximumAllowedTime;
-            %Position
+                %Position
             else
                 speed = rand(1)*(CHARCONFIG.maxJumpHeight-Jump.minSpeed)+Jump.minSpeed;
             end

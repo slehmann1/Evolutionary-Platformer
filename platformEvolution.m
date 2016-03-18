@@ -105,7 +105,6 @@ classdef platformEvolution
                 end
                 [characters(i).fitness, characters(i).undifferentiatedFitness]=characters(i).calculateFitness();
             end
-            disp(num);
             characters=sortByFitness(characters);
             
             

@@ -1,8 +1,8 @@
-classdef Level 
+classdef Level
     %Level Summary of this class goes here
     %   Detailed explanation goes here
     
-
+    
     properties (Constant)
         
         %impacts the vertical stretch
@@ -17,8 +17,8 @@ classdef Level
         y;
     end
     
-    methods    
-            
+    methods
+        
         %constructor
         function level=Level()
             global LEVELCONFIG;
@@ -34,16 +34,16 @@ classdef Level
                 level.y(i)=(rand()-0.5)*2*LEVELCONFIG.maxStairHeight;
                 %check whether the distance is large enough
                 if(abs(level.y(i))>LEVELCONFIG.minStairHeight)
-                    level.y(i) = level.y(i-1)+level.y(i);                
+                    level.y(i) = level.y(i-1)+level.y(i);
                 else
                     level.y(i) = level.y(i-1);
                 end
                 %update the maximum and minimum values
-               if(level.y(i))<minAxisValue
-                   minAxisValue = level.y(i);
-               elseif(level.y(i)>maxAxisValue)
-                   maxAxisValue=level.y(i);
-               end
+                if(level.y(i))<minAxisValue
+                    minAxisValue = level.y(i);
+                elseif(level.y(i)>maxAxisValue)
+                    maxAxisValue=level.y(i);
+                end
             end
             
             %setup the axes
@@ -68,7 +68,7 @@ classdef Level
             end
             y=level.y(xpos/maxStairWidth);
         end
-         
+        
     end
     
 end
