@@ -32,7 +32,18 @@ classdef platformEvolution
             global SEED;
             disp(['SEED:' num2str(SEED)]);
             %Set the seed generator's seed
-            rng(SEED);
+            
+            try 
+                rng(SEED);
+            catch issue
+                %Non-numeric seed
+                if (strcmp(issue.identifier,'MATLAB:rng:badSeed'))
+                    errordlg('Please enter a numeric value');
+                    error('Error. \nMATLAB:rng:badSeed');
+                end
+            end
+                
+                
             if advancedSettings
                 platformEvolution.setDetailedSettings();
             else
