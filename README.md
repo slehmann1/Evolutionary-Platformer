@@ -4,6 +4,11 @@ developed by Samuel Lehmann for the University of Alberta's ENCMP 100 Programmin
 COPYRIGHT INFO: Feel free to copy, plagiarize, steal, and do what you wish with this project. Crediting me would be nice, but I will survive
 if you don't.
 
+Video:
+[Contest Video](https://www.youtube.com/watch?v=_nNFfOxdUSU&feature=youtu.be)
+This video is part of the video that was submitted in the contest.
+
+
 ABOUT
 This is a platformer simulation that solves itself using a genetic algorithm. This algorithm is not the most efficient way to solve a platformer,
 nor does it pretend to be. It takes an iterative process, generating generations of characters that each run the platformer, based on their
