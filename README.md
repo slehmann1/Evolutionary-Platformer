@@ -5,7 +5,7 @@ COPYRIGHT INFO: Feel free to copy, plagiarize, steal, and do what you wish with 
 if you don't.
 
 Video:
-[![Contest Video](http://i.imgur.com/3cTmoGe.png)](https://www.youtube.com/watch?v=nNFfOxdUSU)
+[![Contest Video](http://i.imgur.com/3cTmoGe.png)](https://www.youtube.com/watch?v=_nNFfOxdUSU)
 This video is part of the video that was submitted in the contest.
 
 
